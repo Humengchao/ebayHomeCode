@@ -1,0 +1,65 @@
+# 添加用户，第一次正确，提示：Add account successfully；第二次提示：User already exists
+# base64:{"userId":123,"accountName":"hmc","role":"admin"}
+POST http://localhost:8080/admin/addUser?account=eyJ1c2VySWQiOjEyMywiYWNjb3VudE5hbWUiOiJobWMiLCJyb2xlIjoiYWRtaW4ifQ==
+Accept: application/json
+Content-Type: application/json
+
+{
+  "userId":1234567,
+  "endpoint": [
+    "resource A",
+    "resource B",
+    "resource C"
+  ]
+}
+###
+
+# 添加用户，权限有误，提示：Account role is not admin
+# base64:{"userId":123,"accountName":"hmc","role":"user"}
+POST http://localhost:8080/admin/addUser?account=eyJ1c2VySWQiOjEyMywiYWNjb3VudE5hbWUiOiJobWMiLCJyb2xlIjoidXNlciJ9
+Accept: application/json
+Content-Type: application/json
+
+{
+  "userId":1234567,
+  "endpoint": [
+    "resource A",
+    "resource B",
+    "resource C"
+  ]
+}
+###
+
+# 添加用户，account参数有误，提示：Incorrect account parameters
+# base64:{"userId":123,"accountName":"hmc"}
+POST http://localhost:8080/admin/addUser?account=JTdCJTIydXNlcklkJTIyJTNBMTIzJTJDJTIyYWNjb3VudE5hbWUlMjIlM0ElMjJobWMlMjIlN0Q=
+Accept: application/json
+Content-Type: application/json
+
+{
+  "userId":1234567,
+  "endpoint": [
+    "resource A",
+    "resource B",
+    "resource C"
+  ]
+}
+###
+
+# 获取资源，提示：resource A has permission to be accessed.
+# base64:{"userId":1234567,"accountName":"hmc","role":"user"}
+GET http://localhost:8080/user/resource%20A?account=eyJ1c2VySWQiOjEyMzQ1NjcsImFjY291bnROYW1lIjoiaG1jIiwicm9sZSI6InVzZXIifQ==
+
+Accept: application/json
+###
+
+# 获取资源，提示：No permission to access resource D
+# base64:{"userId":1234567,"accountName":"hmc","role":"user"}
+GET http://localhost:8080/user/resource%20D?account=eyJ1c2VySWQiOjEyMzQ1NjcsImFjY291bnROYW1lIjoiaG1jIiwicm9sZSI6InVzZXIifQ==
+
+Accept: application/json
+###
+
+# 获取资源，提示：Account is missing
+GET http://localhost:8080/user/resource%20A
+
